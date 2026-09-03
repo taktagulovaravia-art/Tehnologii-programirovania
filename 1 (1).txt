@@ -1,0 +1,17 @@
+import math
+
+a = float(input("Введите первый катет: "))
+b = float(input("Введите второй катет: "))
+
+c = math.sqrt(a ** 2 + b ** 2)
+S = (a * b) / 2
+P = a + b + c
+
+angle1 = math.degrees(math.atan(a / b))
+angle2 = math.degrees(math.atan(b / a))
+
+print("Гипотенуза:", c)
+print("Площадь:", S)
+print("Периметр:", P)
+print("Первый острый угол:", angle1)
+print("Второй острый угол:", angle2)
