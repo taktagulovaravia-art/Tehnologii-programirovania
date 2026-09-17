@@ -1,0 +1,21 @@
+class Temperature:
+    def __init__(self, celsius):
+        self.celsius = celsius
+
+    def to_fahrenheit(self):
+        return self.celsius * 9 / 5 + 32
+
+    def to_kelvin(self):
+        return self.celsius + 273.15
+
+    def show_info(self):
+        print("Температура:", self.celsius, "°C")
+        print("В Фаренгейтах:", self.to_fahrenheit(), "°F")
+        print("В Кельвинах:", self.to_kelvin(), "K")
+
+
+# Создание объекта
+temperature = Temperature(30)
+
+# Вывод результата
+temperature.show_info()
