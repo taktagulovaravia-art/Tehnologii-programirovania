@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Запись на курс</title>
+</head>
+<body>
+
+    <h2>Форма записи на курс</h2>
+
+    <form action="#" method="post">
+
+        <label for="name">Имя:</label><br>
+        <input type="text" id="name" name="name" required>
+
+        <br><br>
+
+        <label for="phone">Телефон:</label><br>
+        <input type="tel" id="phone" name="phone" required>
+
+        <br><br>
+
+        <label for="course">Направление обучения:</label><br>
+        <select id="course" name="course" required>
+            <option value="">Выберите направление</option>
+            <option value="programming">Программирование</option>
+            <option value="design">Дизайн</option>
+            <option value="marketing">Маркетинг</option>
+            <option value="english">Английский язык</option>
+        </select>
+
+        <br><br>
+
+        <p>Формат обучения:</p>
+
+        <label>
+            <input type="radio" name="format" value="online" required>
+            Онлайн
+        </label>
+
+        <br>
+
+        <label>
+            <input type="radio" name="format" value="offline">
+            Очно
+        </label>
+
+        <br><br>
+
+        <button type="submit">Записаться</button>
+
+    </form>
+
+</body>
+</html>
