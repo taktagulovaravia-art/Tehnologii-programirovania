@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список покупок</title>
+</head>
+<body>
+
+    <h2>Список покупок</h2>
+
+    <input type="text" id="itemInput" placeholder="Введите товар">
+    <button onclick="addItem()">Добавить</button>
+    <button onclick="clearList()">Очистить список</button>
+
+    <ol id="shoppingList"></ol>
+
+    <script>
+        function addItem() {
+            let input = document.getElementById("itemInput");
+            let item = input.value.trim();
+
+            if (item !== "") {
+                let list = document.getElementById("shoppingList");
+
+                let li = document.createElement("li");
+                li.textContent = item;
+
+                list.appendChild(li);
+
+                input.value = "";
+            }
+        }
+
+        function clearList() {
+            document.getElementById("shoppingList").innerHTML = "";
+        }
+    </script>
+
+</body>
+</html>
