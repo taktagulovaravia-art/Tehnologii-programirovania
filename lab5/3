@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог товаров</title>
+
+    <style>
+        .catalog {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 200px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Каталог товаров</h2>
+
+    <label>
+        Максимальная цена:
+        <input type="number" id="maxPrice" placeholder="Например, 50000">
+    </label>
+
+    <button onclick="filterProducts()">Показать</button>
+    <button onclick="showProducts()">Все товары</button>
+
+    <div id="catalog" class="catalog"></div>
+
+    <script>
+        const products = [
+            {
+                name: "Ноутбук",
+                price: 250000,
+                description: "Мощный ноутбук для работы"
+            },
+            {
+                name: "Смартфон",
+                price: 150000,
+                description: "Современный смартфон"
+            },
+            {
+                name: "Наушники",
+                price: 30000,
+                description: "Беспроводные наушники"
+            },
+            {
+                name: "Мышь",
+                price: 10000,
+                description: "Компьютерная мышь"
+            }
+        ];
+
+        function showProducts(list = products) {
+            const catalog = document.getElementById("catalog");
+
+            catalog.innerHTML = "";
+
+            list.forEach(function(product) {
+                const card = document.createElement("div");
+                card.className = "card";
+
+                card.innerHTML = `
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <strong>${product.price} ₸</strong>
+                `;
+
+                catalog.appendChild(card);
+            });
+        }
+
+        function filterProducts() {
+            const maxPrice = Number(
+                document.getElementById("maxPrice").value
+            );
+
+            const filteredProducts = products.filter(function(product) {
+                return product.price <= maxPrice;
+            });
+
+            showProducts(filteredProducts);
+        }
+
+        showProducts();
+    </script>
+
+</body>
+</html>
