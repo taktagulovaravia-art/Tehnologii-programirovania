@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка возраста</title>
+</head>
+<body>
+
+<script>
+    let age = Number(prompt("Введите ваш возраст:"));
+
+    if (age < 12) {
+        alert("Ребёнок");
+    } else if (age < 18) {
+        alert("Подросток");
+    } else if (age < 60) {
+        alert("Взрослый");
+    } else {
+        alert("Пожилой человек");
+    }
+</script>
+
+</body>
+</html>
