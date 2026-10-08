@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина магазина</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 30px;
+        }
+
+        .cart {
+            max-width: 600px;
+            margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .product {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .product-name {
+            width: 150px;
+        }
+
+        .quantity button {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .quantity span {
+            margin: 0 10px;
+        }
+
+        .delete {
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .total {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="cart">
+
+    <h1>Корзина</h1>
+
+    <!-- Товар 1 -->
+    <div class="product">
+        <div class="product-name">
+            Телефон
+        </div>
+
+        <div>
+            50000 тг
+        </div>
+
+        <div class="quantity">
+            <button onclick="changeQuantity(0, -1)">−</button>
+            <span id="quantity0">1</span>
+            <button onclick="changeQuantity(0, 1)">+</button>
+        </div>
+
+        <button class="delete" onclick="deleteProduct(0)">
+            Удалить
+        </button>
+    </div>
+
+    <!-- Товар 2 -->
+    <div class="product">
+        <div class="product-name">
+            Наушники
+        </div>
+
+        <div>
+            15000 тг
+        </div>
+
+        <div class="quantity">
+            <button onclick="changeQuantity(1, -1)">−</button>
+            <span id="quantity1">1</span>
+            <button onclick="changeQuantity(1, 1)">+</button>
+        </div>
+
+        <button class="delete" onclick="deleteProduct(1)">
+            Удалить
+        </button>
+    </div>
+
+    <!-- Итог -->
+    <div class="total">
+        Товаров: <span id="totalQuantity">2</span>
+        <br>
+        Сумма: <span id="totalPrice">65000</span> тг
+    </div>
+
+</div>
+
+<script>
+
+    // Наши товары
+    let products = [
+        {
+            name: "Телефон",
+            price: 50000,
+            quantity: 1
+        },
+        {
+            name: "Наушники",
+            price: 15000,
+            quantity: 1
+        }
+    ];
+
+
+    // Изменение количества
+    function changeQuantity(index, change) {
+
+        products[index].quantity += change;
+
+        // Количество не может быть меньше 1
+        if (products[index].quantity < 1) {
+            products[index].quantity = 1;
+        }
+
+        // Показываем новое количество
+        document.getElementById("quantity" + index).textContent =
+            products[index].quantity;
+
+        // Пересчитываем корзину
+        updateCart();
+    }
+
+
+    // Удаление товара
+    function deleteProduct(index) {
+
+        // Удаляем товар из массива
+        products.splice(index, 1);
+
+        // Перерисовываем страницу
+        renderCart();
+    }
+
+
+    // Пересчёт суммы и количества
+    function updateCart() {
+
+        let totalQuantity = 0;
+        let totalPrice = 0;
+
+        // Перебираем все товары
+        for (let i = 0; i < products.length; i++) {
+
+            totalQuantity += products[i].quantity;
+
+            totalPrice +=
+                products[i].price * products[i].quantity;
+        }
+
+        // Показываем результат
+        document.getElementById("totalQuantity").textContent =
+            totalQuantity;
+
+        document.getElementById("totalPrice").textContent =
+            totalPrice;
+    }
+
+
+    // Перерисовка корзины после удаления
+    function renderCart() {
+
+        // Перезагружаем страницу
+        location.reload();
+    }
+
+</script>
+
+</body>
+</html>
