@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Клавиатурная игра</title>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Игровой объект */
+        #player {
+            width: 50px;
+            height: 50px;
+            background-color: red;
+
+            position: absolute;
+            left: 100px;
+            top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="player"></div>
+
+    <script>
+        // Находим наш объект
+        let player = document.getElementById("player");
+
+        // Начальная позиция
+        let x = 100;
+        let y = 100;
+
+        // Скорость движения
+        let speed = 10;
+
+        // Отслеживаем нажатие клавиш
+        document.addEventListener("keydown", function(event) {
+
+            // Стрелка вверх
+            if (event.key === "ArrowUp") {
+                y = y - speed;
+            }
+
+            // Стрелка вниз
+            if (event.key === "ArrowDown") {
+                y = y + speed;
+            }
+
+            // Стрелка влево
+            if (event.key === "ArrowLeft") {
+                x = x - speed;
+            }
+
+            // Стрелка вправо
+            if (event.key === "ArrowRight") {
+                x = x + speed;
+            }
+
+            // Меняем положение объекта
+            player.style.left = x + "px";
+            player.style.top = y + "px";
+        });
+    </script>
+
+</body>
+</html>
