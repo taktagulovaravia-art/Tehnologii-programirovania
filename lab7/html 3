@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Бронирование аудиторий</title>
+</head>
+<body>
+
+<h1>Бронирование аудиторий</h1>
+
+<button onclick="rooms()">Аудитории</button>
+<button onclick="bookings()">Бронирования</button>
+<button onclick="rules()">Правила</button>
+
+<div id="content"></div>
+
+<script>
+let list = [];
+let roomsList = ["101", "202", "303"];
+
+function rooms() {
+  content.innerHTML = "<h2>Аудитории</h2>" +
+    roomsList.join("<br>");
+}
+
+function bookings() {
+  content.innerHTML = `
+    <h2>Бронирование</h2>
+    <select id="room">
+      <option>101</option>
+      <option>202</option>
+      <option>303</option>
+    </select><br>
+    <input type="date" id="date"><br>
+    <input type="time" id="start">
+    <input type="time" id="end"><br>
+    <input id="name" placeholder="Ваше имя"><br>
+    <button onclick="add()">Забронировать</button>
+    <p id="msg"></p>
+    <div id="result"></div>
+  `;
+  showList();
+}
+
+function add() {
+  let room = document.getElementById("room").value;
+  let date = document.getElementById("date").value;
+  let start = document.getElementById("start").value;
+  let end = document.getElementById("end").value;
+  let name = document.getElementById("name").value;
+
+  if (!date || !start || !end || !name) {
+    msg.innerHTML = "Заполните все поля!";
+    return;
+  }
+
+  if (start >= end) {
+    msg.innerHTML = "Неверное время!";
+    return;
+  }
+
+  for (let b of list) {
+    if (b.room == room && b.date == date &&
+        start < b.end && end > b.start) {
+      msg.innerHTML = "Время занято!";
+      return;
+    }
+  }
+
+  list.push({room, date, start, end, name});
+  msg.innerHTML = "Успешно забронировано!";
+  showList();
+}
+
+function showList() {
+  if (!document.getElementById("result")) return;
+  result.innerHTML = list.map(b =>
+    `<p>Аудитория ${b.room}, ${b.date},
+    ${b.start}-${b.end}, ${b.name}</p>`
+  ).join("");
+}
+
+function rules() {
+  content.innerHTML = `
+    <h2>Правила</h2>
+    <p>1. Заполните все поля.</p>
+    <p>2. Время окончания должно быть позже начала.</p>
+    <p>3. Нельзя бронировать занятое время.</p>
+  `;
+}
+
+rooms();
+</script>
+
+</body>
+</html>
