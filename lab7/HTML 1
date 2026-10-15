@@ -1,0 +1,293 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Туристический гид</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f7f4;
+            color: #26382e;
+        }
+
+        header {
+            background: #217653;
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+        header h1 {
+            margin-bottom: 10px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+        }
+
+        nav button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: #e1eee5;
+            color: #217653;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        nav button.active,
+        nav button:hover {
+            background: #217653;
+            color: white;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+            min-height: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px #00000012;
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 18px;
+        }
+
+        .card h3 {
+            color: #217653;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .card button {
+            padding: 10px 15px;
+            background: #217653;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .card button:hover {
+            background: #155337;
+        }
+
+        .tip {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        footer {
+            background: #183e2d;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🌍 Туристический гид</h1>
+    <p>Открой новые места и спланируй путешествие!</p>
+</header>
+
+<nav>
+    <button class="active" onclick="showTab('places', this)">
+        Места
+    </button>
+    <button onclick="showTab('routes', this)">
+        Маршруты
+    </button>
+    <button onclick="showTab('tips', this)">
+        Советы
+    </button>
+</nav>
+
+<main id="content"></main>
+
+<footer>
+    <p>© 2026 Туристический гид</p>
+</footer>
+
+<script>
+    // Массив туристических мест
+    const places = [
+        {
+            name: "Большое Алматинское озеро",
+            description: "Красивое горное озеро с бирюзовой водой.",
+            image: "https://placehold.co/400x250/9bc9d1/ffffff?text=Lake"
+        },
+        {
+            name: "Чарынский каньон",
+            description: "Удивительные скалы и живописные пейзажи.",
+            image: "https://placehold.co/400x250/cb9a72/ffffff?text=Canyon"
+        },
+        {
+            name: "Кок-Тобе",
+            description: "Популярная смотровая площадка Алматы.",
+            image: "https://placehold.co/400x250/83b68c/ffffff?text=Kok-Tobe"
+        }
+    ];
+
+    // Массив маршрутов
+    const routes = [
+        {
+            name: "Прогулка по Алматы",
+            description: "Парки, музеи и красивые городские места.",
+            duration: "1 день"
+        },
+        {
+            name: "Поездка в Чарын",
+            description: "Путешествие к знаменитому каньону.",
+            duration: "1 день"
+        },
+        {
+            name: "Горное приключение",
+            description: "Природа, горы и прогулки на свежем воздухе.",
+            duration: "2 дня"
+        }
+    ];
+
+    // Массив советов
+    const tips = [
+        {
+            title: "🎒 Возьми необходимые вещи",
+            text: "Не забудь воду, еду, аптечку и зарядное устройство."
+        },
+        {
+            title: "🌦️ Проверь погоду",
+            text: "Перед поездкой узнай прогноз погоды."
+        },
+        {
+            title: "🥾 Надень удобную обувь",
+            text: "Для прогулок по горам нужна подходящая обувь."
+        },
+        {
+            title: "♻️ Береги природу",
+            text: "Не оставляй мусор и соблюдай правила безопасности."
+        }
+    ];
+
+    const content = document.getElementById("content");
+
+    // Отображение мест
+    function renderPlaces() {
+        content.innerHTML = `
+            <h2>Популярные места</h2>
+            <div class="cards">
+                ${places.map(place => `
+                    <div class="card">
+                        <img src="${place.image}" alt="${place.name}">
+                        <div class="card-content">
+                            <h3>${place.name}</h3>
+                            <p>${place.description}</p>
+                            <button onclick="alert('${place.name}')">
+                                Подробнее
+                            </button>
+                        </div>
+                    </div>
+                `).join("")}
+            </div>
+        `;
+    }
+
+    // Отображение маршрутов
+    function renderRoutes() {
+        content.innerHTML = `
+            <h2>Туристические маршруты</h2>
+            <div class="cards">
+                ${routes.map(route => `
+                    <div class="card">
+                        <div class="card-content">
+                            <h3>${route.name}</h3>
+                            <p>${route.description}</p>
+                            <p><b>Длительность:</b> ${route.duration}</p>
+                        </div>
+                    </div>
+                `).join("")}
+            </div>
+        `;
+    }
+
+    // Отображение советов
+    function renderTips() {
+        content.innerHTML = `
+            <h2>Советы путешественникам</h2>
+            ${tips.map(tip => `
+                <div class="tip">
+                    <h3>${tip.title}</h3>
+                    <p>${tip.text}</p>
+                </div>
+            `).join("")}
+        `;
+    }
+
+    // Переключение вкладок SPA
+    function showTab(tab, button) {
+        document.querySelectorAll("nav button").forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        if (tab === "places") {
+            renderPlaces();
+        } else if (tab === "routes") {
+            renderRoutes();
+        } else if (tab === "tips") {
+            renderTips();
+        }
+    }
+
+    // Начальная загрузка
+    renderPlaces();
+</script>
+
+</body>
+</html>
