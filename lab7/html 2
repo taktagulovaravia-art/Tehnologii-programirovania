@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Погода</title>
+<style>
+body {
+  font-family: Arial;
+  background: #e0f2fe;
+  text-align: center;
+  padding: 20px;
+}
+button, select {
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+.box {
+  background: white;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 400px;
+  border-radius: 15px;
+}
+</style>
+</head>
+<body>
+
+<h1>☀️ Погода</h1>
+
+<select id="city" onchange="showToday()">
+  <option>Алматы</option>
+  <option>Астана</option>
+  <option>Шымкент</option>
+</select>
+
+<br>
+
+<button onclick="today()">Сегодня</button>
+<button onclick="week()">Неделя</button>
+<button onclick="cities()">Города</button>
+
+<div class="box" id="result"></div>
+
+<script>
+let data = [
+  {
+    city: "Алматы",
+    temp: 18,
+    weather: "☀️ Солнечно",
+    week: [18, 20, 21, 17, 19, 22, 20]
+  },
+  {
+    city: "Астана",
+    temp: 10,
+    weather: "☁️ Облачно",
+    week: [10, 12, 9, 11, 13, 8, 10]
+  },
+  {
+    city: "Шымкент",
+    temp: 25,
+    weather: "🌤️ Ясно",
+    week: [25, 27, 26, 24, 28, 25, 27]
+  }
+];
+
+function getCity() {
+  return data.find(x =>
+    x.city === document.getElementById("city").value
+  );
+}
+
+function today() {
+  let c = getCity();
+  document.getElementById("result").innerHTML =
+    "<h2>" + c.city + "</h2>" +
+    "<h1>" + c.temp + "°C</h1>" +
+    "<p>" + c.weather + "</p>";
+}
+
+function showToday() {
+  today();
+}
+
+function week() {
+  let c = getCity();
+  let html = "<h2>Прогноз на неделю</h2>";
+
+  c.week.forEach((t, i) => {
+    html += "<p>День " + (i + 1) + ": " + t + "°C</p>";
+  });
+
+  document.getElementById("result").innerHTML = html;
+}
+
+function cities() {
+  let html = "<h2>Города</h2>";
+
+  data.forEach(c => {
+    html += "<p>" + c.city + " — " + c.temp + "°C</p>";
+  });
+
+  document.getElementById("result").innerHTML = html;
+}
+
+today();
+</script>
+
+</body>
+</html>
