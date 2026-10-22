@@ -1,0 +1,449 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учет личных расходов</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .balance-box {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            box-shadow: 0 2px 6px #ddd;
+        }
+
+        .income {
+            color: green;
+        }
+
+        .expense {
+            color: red;
+        }
+
+        .form-box, .report-box {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        input, select, button {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        button {
+            background-color: #4267d5;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #304fb0;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            padding: 7px;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        th {
+            background-color: #4267d5;
+            color: white;
+        }
+
+        .table-box {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        #message {
+            color: red;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .card {
+                min-width: 100px;
+                padding: 12px 5px;
+            }
+
+            th, td {
+                padding: 6px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Учет личных расходов</h1>
+
+    <!-- Блок с балансом -->
+    <div class="balance-box">
+
+        <div class="card">
+            <h3>Доходы</h3>
+            <h2 class="income" id="income">0 ₸</h2>
+        </div>
+
+        <div class="card">
+            <h3>Расходы</h3>
+            <h2 class="expense" id="expenses">0 ₸</h2>
+        </div>
+
+        <div class="card">
+            <h3>Баланс</h3>
+            <h2 id="balance">0 ₸</h2>
+        </div>
+
+    </div>
+
+    <!-- Форма добавления операции -->
+    <div class="form-box">
+
+        <h2>Добавить операцию</h2>
+
+        <label for="type">Тип операции:</label>
+        <select id="type">
+            <option value="income">Доход</option>
+            <option value="expense">Расход</option>
+        </select>
+
+        <label for="amount">Сумма в тенге:</label>
+        <input
+            type="number"
+            id="amount"
+            placeholder="Например, 5000"
+            min="0.01"
+            step="0.01"
+        >
+
+        <label for="category">Категория:</label>
+        <select id="category">
+            <option value="Зарплата">Зарплата</option>
+            <option value="Стипендия">Стипендия</option>
+            <option value="Еда">Еда</option>
+            <option value="Транспорт">Транспорт</option>
+            <option value="Учеба">Учеба</option>
+            <option value="Покупки">Покупки</option>
+            <option value="Развлечения">Развлечения</option>
+            <option value="Другое">Другое</option>
+        </select>
+
+        <label for="description">Описание:</label>
+        <input
+            type="text"
+            id="description"
+            placeholder="Например, покупка продуктов"
+        >
+
+        <button onclick="addOperation()">Добавить</button>
+
+        <p id="message" role="alert"></p>
+
+    </div>
+
+    <!-- История операций -->
+    <h2>История операций</h2>
+
+    <div class="table-box">
+        <table>
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Тип</th>
+                    <th>Сумма</th>
+                    <th>Категория</th>
+                    <th>Описание</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+
+            <tbody id="history"></tbody>
+        </table>
+    </div>
+
+    <!-- Отчет -->
+    <div class="report-box">
+        <h2>Отчет по расходам</h2>
+        <div id="report">Расходов пока нет.</div>
+    </div>
+
+</div>
+
+<script>
+    // Загружаем сохраненные операции
+    let operations = [];
+
+    try {
+        operations = JSON.parse(
+            localStorage.getItem("operations") || "[]"
+        );
+
+        if (!Array.isArray(operations)) {
+            operations = [];
+        }
+
+        operations = operations.filter(function (op) {
+            return op &&
+                (op.type === "income" || op.type === "expense") &&
+                typeof op.amount === "number" &&
+                Number.isFinite(op.amount) &&
+                op.amount > 0 &&
+                typeof op.category === "string" &&
+                typeof op.date === "string";
+        });
+    } catch (error) {
+        operations = [];
+    }
+
+    // Сохраняем данные в браузере
+    function saveOperations() {
+        try {
+            localStorage.setItem(
+                "operations",
+                JSON.stringify(operations)
+            );
+            return true;
+        } catch (error) {
+            alert("Не удалось сохранить данные в браузере.");
+            return false;
+        }
+    }
+
+    // Добавляем операцию
+    function addOperation() {
+        const type = document.getElementById("type").value;
+        const amountText = document.getElementById("amount").value;
+        const amount = Number(amountText);
+        const category = document.getElementById("category").value;
+        const description =
+            document.getElementById("description").value.trim();
+        const message = document.getElementById("message");
+
+        message.textContent = "";
+
+        // Проверяем сумму
+        if (
+            amountText.trim() === "" ||
+            !Number.isFinite(amount) ||
+            amount <= 0
+        ) {
+            message.textContent =
+                "Ошибка: введите сумму больше нуля.";
+            return;
+        }
+
+        // Проверяем категорию
+        if (category.trim() === "") {
+            message.textContent =
+                "Ошибка: выберите категорию.";
+            return;
+        }
+
+        // Создаем новую запись
+        const operation = {
+            type: type,
+            amount: amount,
+            category: category,
+            description: description,
+            date: new Date().toLocaleDateString("ru-RU")
+        };
+
+        operations.push(operation);
+
+        // Если сохранить не удалось, отменяем добавление
+        if (!saveOperations()) {
+            operations.pop();
+            return;
+        }
+
+        document.getElementById("amount").value = "";
+        document.getElementById("description").value = "";
+
+        message.style.color = "green";
+        message.textContent = "Операция успешно добавлена!";
+
+        updatePage();
+    }
+
+    // Удаляем операцию
+    function deleteOperation(index) {
+        const answer = confirm("Удалить эту операцию?");
+
+        if (!answer) {
+            return;
+        }
+
+        const removed = operations.splice(index, 1)[0];
+
+        if (!saveOperations()) {
+            operations.splice(index, 0, removed);
+            return;
+        }
+
+        updatePage();
+    }
+
+    // Обновляем баланс, историю и отчет
+    function updatePage() {
+        let income = 0;
+        let expenses = 0;
+
+        operations.forEach(function (operation) {
+            if (operation.type === "income") {
+                income += operation.amount;
+            } else {
+                expenses += operation.amount;
+            }
+        });
+
+        document.getElementById("income").textContent =
+            income.toLocaleString("ru-RU") + " ₸";
+
+        document.getElementById("expenses").textContent =
+            expenses.toLocaleString("ru-RU") + " ₸";
+
+        document.getElementById("balance").textContent =
+            (income - expenses).toLocaleString("ru-RU") + " ₸";
+
+        updateHistory();
+        updateReport();
+    }
+
+    // Показываем историю
+    function updateHistory() {
+        const history = document.getElementById("history");
+        history.replaceChildren();
+
+        operations.forEach(function (operation, index) {
+            const row = document.createElement("tr");
+
+            const values = [
+                operation.date,
+                operation.type === "income" ? "Доход" : "Расход",
+                operation.amount.toLocaleString("ru-RU") + " ₸",
+                operation.category,
+                operation.description || "-"
+            ];
+
+            values.forEach(function (value) {
+                const cell = document.createElement("td");
+                cell.textContent = value;
+                row.appendChild(cell);
+            });
+
+            const actionCell = document.createElement("td");
+            const button = document.createElement("button");
+
+            button.textContent = "Удалить";
+            button.className = "delete-button";
+
+            button.addEventListener("click", function () {
+                deleteOperation(index);
+            });
+
+            actionCell.appendChild(button);
+            row.appendChild(actionCell);
+            history.appendChild(row);
+        });
+    }
+
+    // Считаем расходы по категориям
+    function updateReport() {
+        const report = document.getElementById("report");
+        const totals = {};
+
+        operations.forEach(function (operation) {
+            if (operation.type === "expense") {
+                totals[operation.category] =
+                    (totals[operation.category] || 0) +
+                    operation.amount;
+            }
+        });
+
+        report.replaceChildren();
+
+        const categories = Object.keys(totals);
+
+        if (categories.length === 0) {
+            report.textContent = "Расходов пока нет.";
+            return;
+        }
+
+        categories.forEach(function (category) {
+            const paragraph = document.createElement("p");
+
+            paragraph.textContent =
+                category + ": " +
+                totals[category].toLocaleString("ru-RU") + " ₸";
+
+            report.appendChild(paragraph);
+        });
+    }
+
+    // Показываем данные при открытии страницы
+    updatePage();
+</script>
+
+</body>
+</html>
