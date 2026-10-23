@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Простая корзина</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .item { margin-bottom: 15px; background: #f9f9f9; padding: 10px; width: 250px; }
+        input { width: 50px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h2>Корзина товаров</h2>
+
+    <!-- Товар 1: Футболка (цена 1000 руб.) -->
+    <div class="item">
+        <h3>Футболка (1000 руб.)</h3>
+        <label>Количество: </label>
+        <input type="number" id="shirt" value="0" min="0" oninput="calculate()">
+    </div>
+
+    <!-- Товар 2: Джинсы (цена 2500 руб.) -->
+    <div class="item">
+        <h3>Джинсы (2500 руб.)</h3>
+        <label>Количество: </label>
+        <input type="number" id="jeans" value="0" min="0" oninput="calculate()">
+    </div>
+
+    <h2>Итого: <span id="total">0</span> руб.</h2>
+    <button onclick="clearCart()">Очистить</button>
+
+    <script>
+    
+        const shirtInput = document.getElementById('shirt');
+        const jeansInput = document.getElementById('jeans');
+        const totalSpan = document.getElementById('total');
+
+      
+        if (localStorage.getItem('shirt')) {
+            shirtInput.value = localStorage.getItem('shirt');
+        }
+        if (localStorage.getItem('jeans')) {
+            jeansInput.value = localStorage.getItem('jeans');
+        }
+        
+      
+        calculate();
+
+        
+        function calculate() {
+            // Берем количество и переводим в числа
+            let shirtQty = Number(shirtInput.value);
+            let jeansQty = Number(jeansInput.value);
+
+            // Считаем общую стоимость (цены: футболка — 1000, джинсы — 2500)
+            let sum = (shirtQty * 1000) + (jeansQty * 2500);
+
+            // Выводим результат на экран
+            totalSpan.textContent = sum;
+
+            // Сохраняем в память браузера
+            localStorage.setItem('shirt', shirtQty);
+            localStorage.setItem('jeans', jeansQty);
+        }
+
+      
+        function clearCart() {
+            shirtInput.value = 0;
+            jeansInput.value = 0;
+            localStorage.clear(); // Очищаем всю память
+            calculate(); // Пересчитываем (станет 0)
+        }
+    </script>
+
+</body>
+</html>
