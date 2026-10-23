@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Анкета</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 30px; }
+        input, button { display: block; margin-bottom: 15px; padding: 8px; width: 250px; }
+    </style>
+</head>
+<body>
+
+    <h2>Анкета</h2>
+
+    <label>Имя:</label>
+    <input type="text" id="name">
+
+    <label>Группа:</label>
+    <input type="text" id="group">
+
+    <label>Город:</label>
+    <input type="text" id="city">
+
+    <button onclick="saveData()">Сохранить</button>
+    <button onclick="clearData()">Очистить</button>
+
+    <script>
+        
+        document.getElementById('name').value = localStorage.getItem('savedName') || '';
+        document.getElementById('group').value = localStorage.getItem('savedGroup') || '';
+        document.getElementById('city').value = localStorage.getItem('savedCity') || '';
+
+        
+        function saveData() {
+            let nameValue = document.getElementById('name').value;
+            let groupValue = document.getElementById('group').value;
+            let cityValue = document.getElementById('city').value;
+
+            localStorage.setItem('savedName', nameValue);
+            localStorage.setItem('savedGroup', groupValue);
+            localStorage.setItem('savedCity', cityValue);
+
+            alert('Данные сохранены!');
+        }
+
+        
+        function clearData() {
+            localStorage.clear();
+
+            document.getElementById('name').value = '';
+            document.getElementById('group').value = '';
+            document.getElementById('city').value = '';
+
+            alert('Данные удалены!');
+        }
+    </script>
+
+</body>
+</html>
