@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Бронь комнаты</title>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+
+    <h2>Бронирование комнаты</h2>
+
+
+    <p>Дата: <input type="date" id="dateInput"></p>
+    <p>Время: <input type="time" id="timeInput"></p>
+    
+    <p>Комната: 
+        <select id="roomInput">
+            <option>Комната 1</option>
+            <option>Комната 2</option>
+        </select>
+    </p>
+
+    <button onclick="saveRoom()">Забронировать</button>
+
+    <h3 id="result">Здесь будет ваша бронь</h3>
+
+    <script>
+      
+        let savedData = localStorage.getItem('bron');
+        
+       
+        if (savedData != null) {
+            document.getElementById('result').innerHTML = savedData;
+        }
+       
+        function saveRoom() {
+            
+            let d = document.getElementById('dateInput').value;
+            let t = document.getElementById('timeInput').value;
+            let r = document.getElementById('roomInput').value;
+           
+            if (d == '' || t == '') {
+                alert('Заполните дату и время!');
+                return;
+            }
+            
+            let total = r + ', Дата: ' + d + ', Время: ' + t;
+    
+            localStorage.setItem('bron', total);
+          
+            document.getElementById('result').innerHTML = total;
+            
+            alert('Комната забронирована!');
+        }
+    </script>
+
+</body>
+</html>
