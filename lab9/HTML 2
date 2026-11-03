@@ -1,0 +1,13 @@
+const postId = 1;
+
+fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
+  .then(response => response.json())
+  .then(comments => {
+    comments.forEach(comment => {
+      console.log(`Автор: ${comment.name}`);
+      console.log(`Email: ${comment.email}`);
+      console.log(`Текст: ${comment.body}`);
+      console.log('-------------------------');
+    });
+  })
+  .catch(error => console.error('Ошибка:', error));
