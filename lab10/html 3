@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Бронирование помещений</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #2878d0;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Бронирование помещений</h2>
+
+    <label>Выберите помещение:</label>
+    <select id="room">
+        <option value="101">Комната 101</option>
+        <option value="102">Комната 102</option>
+        <option value="103">Комната 103</option>
+    </select>
+
+    <label>Дата:</label>
+    <input type="date" id="date">
+
+    <label>Время начала:</label>
+    <input type="time" id="start">
+
+    <label>Время окончания:</label>
+    <input type="time" id="end">
+
+    <button id="book">Забронировать</button>
+
+    <div id="result"></div>
+
+    <h3>Список бронирований</h3>
+    <ul id="bookingList"></ul>
+
+    <script>
+        // rooms.js — список помещений
+        const rooms = [
+            { id: "101", name: "Комната 101" },
+            { id: "102", name: "Комната 102" },
+            { id: "103", name: "Комната 103" }
+        ];
+
+        // booking.js — существующие бронирования
+        const bookings = [];
+
+        function addBooking(room, date, start, end) {
+            const booking = {
+                room,
+                date,
+                start,
+                end
+            };
+
+            bookings.push(booking);
+            return booking;
+        }
+
+        // validation.js — проверка времени
+        function validateBooking(room, date, start, end) {
+            if (!date || !start || !end) {
+                return "Заполните все поля!";
+            }
+
+            if (start >= end) {
+                return "Время окончания должно быть позже начала!";
+            }
+
+            const overlap = bookings.some(booking => {
+                return (
+                    booking.room === room &&
+                    booking.date === date &&
+                    start < booking.end &&
+                    end > booking.start
+                );
+            });
+
+            if (overlap) {
+                return "Это время уже занято!";
+            }
+
+            return null;
+        }
+
+        // ui.js — управление интерфейсом
+        const button = document.getElementById("book");
+
+        button.addEventListener("click", function() {
+            const room = document.getElementById("room").value;
+            const date = document.getElementById("date").value;
+            const start = document.getElementById("start").value;
+            const end = document.getElementById("end").value;
+
+            const error = validateBooking(room, date, start, end);
+
+            const result = document.getElementById("result");
+
+            if (error) {
+                result.style.color = "red";
+                result.textContent = error;
+                return;
+            }
+
+            addBooking(room, date, start, end);
+
+            result.style.color = "green";
+            result.textContent = "Помещение успешно забронировано!";
+
+            showBookings();
+        });
+
+        function showBookings() {
+            const list = document.getElementById("bookingList");
+            list.innerHTML = "";
+
+            bookings.forEach(booking => {
+                const item = document.createElement("li");
+
+                item.textContent =
+                    "Комната " + booking.room +
+                    " | " + booking.date +
+                    " | " + booking.start +
+                    " - " + booking.end;
+
+                list.appendChild(item);
+            });
+        }
+    </script>
+
+</body>
+</html>
