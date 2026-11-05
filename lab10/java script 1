@@ -1,0 +1,19 @@
+let price = Number(prompt("Введите цену товара:"));
+let discount = Number(prompt("Введите скидку в процентах:"));
+
+if (
+    !Number.isFinite(price) ||
+    !Number.isFinite(discount) ||
+    price < 0 ||
+    discount < 0 ||
+    discount > 100
+) {
+    alert("Ошибка! Введите корректные числа.");
+} else {
+    let discountAmount = price * discount / 100;
+    let finalPrice = price - discountAmount;
+
+    alert("Цена товара: " + price +
+        "\nСкидка: " + discountAmount +
+        "\nИтоговая цена: " + finalPrice);
+}
