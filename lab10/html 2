@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Расчёт среднего балла</title>
+</head>
+<body>
+
+    <h2>Расчёт среднего балла</h2>
+
+    <input
+        type="text"
+        id="grades"
+        placeholder="Введите оценки: 5, 4, 3, 5"
+    >
+
+    <button id="calculate">Рассчитать</button>
+
+    <h3 id="result">Результат появится здесь</h3>
+
+    <button id="save">Сохранить JSON</button>
+
+    <script>
+        // grades.js
+        function calculateAverage(grades) {
+            const sum = grades.reduce((a, b) => a + b, 0);
+            return sum / grades.length;
+        }
+
+        // storage.js
+        function saveData(data) {
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], {
+                type: "application/json"
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = "grades.json";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        // main.js
+        let savedData = null;
+
+        document.getElementById("calculate").onclick = function() {
+            const input = document.getElementById("grades").value.trim();
+
+            const grades = input.split(",").map(x => Number(x.trim()));
+
+            if (
+                input === "" ||
+                grades.some(x => !Number.isInteger(x) || x < 2 || x > 5)
+            ) {
+                document.getElementById("result").textContent =
+                    "Ошибка! Введите оценки от 2 до 5.";
+                return;
+            }
+
+            const average = calculateAverage(grades);
+
+            savedData = {
+                grades: grades,
+                average: Number(average.toFixed(2))
+            };
+
+            document.getElementById("result").textContent =
+                "Средний балл: " + average.toFixed(2);
+        };
+
+        document.getElementById("save").onclick = function() {
+            if (savedData === null) {
+                alert("Сначала рассчитайте средний балл!");
+                return;
+            }
+
+            saveData(savedData);
+        };
+    </script>
+
+</body>
+</html>
