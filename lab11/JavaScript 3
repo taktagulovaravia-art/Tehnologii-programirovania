@@ -1,0 +1,92 @@
+import { useState } from "react";
+
+// Компонент строки студента
+function StudentRow({ student, onGradeChange }) {
+  return (
+    <div style={{
+      border: "1px solid gray",
+      padding: "15px",
+      margin: "10px",
+      borderRadius: "8px"
+    }}>
+      <h3>{student.name}</h3>
+      <p>Группа: {student.group}</p>
+
+      <p>Оценки: {student.grades.join(", ")}</p>
+
+      <input
+        type="number"
+        min="1"
+        max="100"
+        placeholder="Новая оценка"
+        onChange={(e) =>
+          onGradeChange(student.id, Number(e.target.value))
+        }
+      />
+    </div>
+  );
+}
+
+// Родительский компонент
+function App() {
+  const [students, setStudents] = useState([
+    {
+      id: 1,
+      name: "Милана",
+      group: "ИС-25-21",
+      grades: [90, 85, 95]
+    },
+    {
+      id: 2,
+      name: "Амира",
+      group: "ИС-25-21",
+      grades: [80, 90, 85]
+    },
+    {
+      id: 3,
+      name: "Равия",
+      group: "ИС-25-21",
+      grades: [75, 88, 92]
+    }
+  ]);
+
+  // Добавление новой оценки
+  function addGrade(id, grade) {
+    if (grade < 1 || grade > 100) return;
+
+    setStudents(students.map(student =>
+      student.id === id
+        ? { ...student, grades: [...student.grades, grade] }
+        : student
+    ));
+  }
+
+  // Расчёт среднего балла
+  function getAverage(grades) {
+    if (grades.length === 0) return 0;
+
+    const sum = grades.reduce((a, b) => a + b, 0);
+    return (sum / grades.length).toFixed(2);
+  }
+
+  return (
+    <div>
+      <h1>Электронный журнал</h1>
+
+      {students.map(student => (
+        <div key={student.id}>
+          <StudentRow
+            student={student}
+            onGradeChange={addGrade}
+          />
+
+          <p>
+            Средний балл: {getAverage(student.grades)}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default App;
