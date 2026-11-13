@@ -1,0 +1,33 @@
+import { useState } from "react";
+
+function Rating({ maxRating = 5 }) {
+  const [rating, setRating] = useState(0);
+
+  return (
+    <div>
+      <h3>Оценка занятия</h3>
+
+      {Array.from({ length: maxRating }, (_, index) => (
+        <button
+          key={index}
+          onClick={() => setRating(index + 1)}
+          style={{
+            color: index < rating ? "orange" : "gray",
+            fontSize: "25px",
+            border: "none",
+            background: "none",
+            cursor: "pointer"
+          }}
+        >
+          ★
+        </button>
+      ))}
+
+      <p>Ваша оценка: {rating} из {maxRating}</p>
+    </div>
+  );
+}
+
+export default function App() {
+  return <Rating maxRating={5} />;
+}
