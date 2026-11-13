@@ -1,0 +1,72 @@
+import { useState } from "react";
+
+// Карточка курса
+function CourseCard({ title, description, duration, onSelect }) {
+  return (
+    <div style={{
+      border: "1px solid gray",
+      padding: "15px",
+      margin: "10px",
+      borderRadius: "10px"
+    }}>
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <p>Длительность: {duration}</p>
+
+      <button onClick={onSelect}>
+        Подробнее
+      </button>
+    </div>
+  );
+}
+
+// Родительский компонент
+function App() {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  const courses = [
+    {
+      id: 1,
+      title: "Python",
+      description: "Изучение основ языка Python.",
+      duration: "2 месяца"
+    },
+    {
+      id: 2,
+      title: "HTML и CSS",
+      description: "Создание и оформление веб-сайтов.",
+      duration: "1 месяц"
+    },
+    {
+      id: 3,
+      title: "SQL",
+      description: "Работа с базами данных.",
+      duration: "3 месяца"
+    }
+  ];
+
+  return (
+    <div>
+      <h1>Каталог курсов</h1>
+
+      {courses.map((course) => (
+        <CourseCard
+          key={course.id}
+          title={course.title}
+          description={course.description}
+          duration={course.duration}
+          onSelect={() => setSelectedCourse(course)}
+        />
+      ))}
+
+      {selectedCourse && (
+        <div>
+          <h2>Информация о курсе</h2>
+          <h3>{selectedCourse.title}</h3>
+          <p>{selectedCourse.description}</p>
+          <p>Длительность: {selectedCourse.duration}</p>
+        </div>
+      )}
+    </div>
+  );
+}
