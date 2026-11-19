@@ -1,0 +1,88 @@
+import React, { useState, useEffect } from "react";
+
+function TeacherCabinet() {
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [error, setError] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    if (login === "teacher" && password === "12345") {
+      setIsLoggedIn(true);
+      setTimeLeft(30);
+      setError("");
+    } else {
+      setError("Неверный логин или пароль");
+    }
+  };
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    if (timeLeft <= 0) {
+      setIsLoggedIn(false);
+      setLogin("");
+      setPassword("");
+      setError("Время сессии истекло. Войдите повторно.");
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [isLoggedIn, timeLeft]);
+
+  const logout = () => {
+    setIsLoggedIn(false);
+    setTimeLeft(30);
+    setLogin("");
+    setPassword("");
+  };
+
+  return (
+    <div>
+      <h2>Личный кабинет преподавателя</h2>
+
+      {!isLoggedIn ? (
+        <form onSubmit={handleLogin}>
+          <input
+            type="text"
+            placeholder="Логин"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+          />
+
+          <input
+            type="password"
+            placeholder="Пароль"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button type="submit">Войти</button>
+
+          <p>{error}</p>
+        </form>
+      ) : (
+        <div>
+          <h3>Добро пожаловать, Иван Иванов!</h3>
+          <p>Роль: Преподаватель</p>
+          <p>Статус: Авторизован</p>
+
+          <h4>
+            До завершения сессии: {timeLeft} секунд
+          </h4>
+
+          <button onClick={logout}>Выйти</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default TeacherCabinet;
