@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мини-форум</title>
+</head>
+<body>
+
+    <h1>Мини-форум</h1>
+
+    <div id="login">
+        <h3>Вход в аккаунт</h3>
+        <input type="text" id="username" placeholder="Логин">
+        <input type="password" id="password" placeholder="Пароль">
+        <button onclick="login()">Войти</button>
+        <p id="error" style="color:red;"></p>
+    </div>
+
+    <div id="userInfo" style="display:none;">
+        <p>Вы вошли как: <b id="userName"></b></p>
+        <button onclick="logout()">Выйти</button>
+    </div>
+
+    <h2>Публикации форума</h2>
+    <div id="posts"></div>
+
+    <div id="guestMessage">
+        <p>Вы просматриваете форум как гость.
+        Войдите, чтобы создавать публикации.</p>
+    </div>
+
+    <div id="postForm" style="display:none;">
+        <h3>Создать публикацию</h3>
+        <input type="text" id="postTitle"
+               placeholder="Заголовок">
+        <br><br>
+        <textarea id="postText"
+                  placeholder="Текст публикации"></textarea>
+        <br><br>
+        <button onclick="addPost()">Опубликовать</button>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
