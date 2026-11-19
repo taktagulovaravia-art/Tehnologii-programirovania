@@ -1,0 +1,124 @@
+import React, { useState, useEffect } from "react";
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [timeLeft, setTimeLeft] = useState(60);
+
+  // Проверка пользователя
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    if (login === "teacher" && password === "12345") {
+      setUser({
+        name: "Иван Иванов",
+        role: "Преподаватель"
+      });
+      setTimeLeft(60);
+      setError("");
+    } else if (login === "student" && password === "12345") {
+      setUser({
+        name: "Александр Петров",
+        role: "Студент"
+      });
+      setTimeLeft(60);
+      setError("");
+    } else {
+      setError("Неверный логин или пароль");
+    }
+  };
+
+  // Истечение сессии
+  useEffect(() => {
+    if (!user) return;
+
+    if (timeLeft <= 0) {
+      setUser(null);
+      setError("Сессия истекла. Войдите повторно.");
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeLeft(prev => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [user, timeLeft]);
+
+  // Безопасный выход
+  const logout = () => {
+    setUser(null);
+    setLogin("");
+    setPassword("");
+    setTimeLeft(60);
+    setError("Вы вышли из системы");
+  };
+
+  // Защищенная страница
+  const ProtectedPage = () => {
+    if (!user) {
+      return <h3>Доступ запрещен. Выполните вход.</h3>;
+    }
+
+    return (
+      <div>
+        <h2>Личный кабинет</h2>
+        <p>Имя: {user.name}</p>
+        <p>Роль: {user.role}</p>
+        <p>Осталось времени: {timeLeft} секунд</p>
+
+        {user.role === "Преподаватель" && (
+          <h3>Раздел преподавателя: Управление оценками</h3>
+        )}
+
+        {user.role === "Студент" && (
+          <h3>Раздел студента: Просмотр оценок</h3>
+        )}
+
+        <button onClick={logout}>
+          Выйти со всех устройств
+        </button>
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ padding: "20px", fontFamily: "Arial" }}>
+      <h1>Учебный портал</h1>
+
+      {!user ? (
+        <form onSubmit={handleLogin}>
+          <h2>Авторизация</h2>
+
+          <input
+            type="text"
+            placeholder="Логин"
+            value={login}
+            onChange={e => setLogin(e.target.value)}
+          />
+
+          <br /><br />
+
+          <input
+            type="password"
+            placeholder="Пароль"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+
+          <br /><br />
+
+          <button type="submit">Войти</button>
+
+          <p style={{ color: "red" }}>{error}</p>
+        </form>
+      ) : (
+        <ProtectedPage />
+      )}
+    </div>
+  );
+}
+
+export default App;
